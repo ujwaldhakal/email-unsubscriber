@@ -20,20 +20,20 @@ type Service struct {
 
 
 func GetConnection() *gorm.DB{
-// refer https://github.com/go-sql-driver/mysql#dsn-data-source-name for details
+	// refer https://github.com/go-sql-driver/mysql#dsn-data-source-name for details
 	db, err := gorm.Open(postgres.New(postgres.Config{
 		DSN: "host=pgsql user=postgres password=postgres dbname=postgres port=5432 sslmode=disable",
 		PreferSimpleProtocol: true, // disables implicit prepared statement usage
 	}), &gorm.Config{})
 	if err != nil {
-	panic(err)
-}
+		panic(err)
+	}
 	db.AutoMigrate(&Service{})
 
 	return db
 }
 
-func CreateService(service Service)  {
+func (*Service) Create(service Service)  {
 	db := GetConnection()
 
 	sqlDB ,err := db.DB()
@@ -45,7 +45,7 @@ func CreateService(service Service)  {
 	db.Create(service)
 }
 
-func SearchByNameAndSender(name string, sender string)  []Service {
+func (*Service) SearchByNameAndSender(name string, sender string)  []Service {
 	db:= GetConnection()
 	sqlDB ,err := db.DB()
 

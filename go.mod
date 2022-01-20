@@ -9,6 +9,7 @@ require (
 	github.com/gofrs/uuid v4.0.0+incompatible // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
+	github.com/google/uuid v1.3.0 // indirect
 	github.com/googleapis/gax-go/v2 v2.1.1 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
@@ -44,4 +45,5 @@ require (
 	gorm.io/driver/mysql v1.2.3 // indirect
 	gorm.io/driver/postgres v1.2.3 // indirect
 	gorm.io/gorm v1.22.5 // indirect
+	mvdan.cc/xurls/v2 v2.3.0 // indirect
 )
