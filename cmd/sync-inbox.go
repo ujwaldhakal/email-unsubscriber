@@ -8,7 +8,6 @@ import (
 	"github.com/ujwaldhakal/email-unsubscriber/service"
 	gmailApi "github.com/ujwaldhakal/email-unsubscriber/service"
 	"google.golang.org/api/gmail/v1"
-	"os"
 )
 
 
@@ -36,7 +35,7 @@ func getMessages(srv *gmail.Service, token service.PageToken) {
 
 
 
-var rootCmd = &cobra.Command{
+var syncInbox = &cobra.Command{
 	Use:   "sync-inbox",
 	Short: "Hugo is a very fast static site generator",
 	Long: `A Fast and Flexible Static Site Generator built with
@@ -54,9 +53,7 @@ var rootCmd = &cobra.Command{
 	},
 }
 
-func Execute() {
-	if err := rootCmd.Execute(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
-	}
+
+func init()  {
+	rootCmd.AddCommand(syncInbox)
 }
