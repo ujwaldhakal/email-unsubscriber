@@ -8,6 +8,7 @@ services:
       - "./:/app"
     depends_on:
       - rabbit
+      - pgsql
   rabbit:
     image: rabbitmq:3-management-alpine
     container_name: 'rabbit'
