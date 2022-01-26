@@ -9,5 +9,5 @@ publish:
 consume:
 	docker-compose run unsubscriber go run main.go parse-email
 
-asyncConsume:
-	make -j consume
+serve-frontend:
+	docker-compose run -p 1323:1323 unsubscriber go run main.go serve-frontend

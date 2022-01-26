@@ -6,6 +6,8 @@ services:
       context: './'
     volumes:
       - "./:/app"
+    ports:
+      - "1323:1323"
     depends_on:
       - rabbit
       - pgsql
