@@ -59,5 +59,36 @@ func (*Service) SearchByNameAndSender(name string, sender string)  []Service {
 	db.Where(&Service{Name: name, Sender: sender}).Find(&services)
 
 	return services
-
 }
+
+
+func (*Service) Get() []Service {
+	db:= GetConnection()
+	sqlDB ,err := db.DB()
+
+	if err != nil {
+		fmt.Println("got error while closing db connection")
+	}
+	defer sqlDB.Close()
+
+	var services  []Service
+
+	db.Model(&Service{}).Where("unsubscribed = ?",false).Find(&services)
+
+	return services
+}
+
+
+
+func (*Service) Unsubscribe(id string) {
+	db:= GetConnection()
+	sqlDB ,err := db.DB()
+
+	if err != nil {
+		fmt.Println("got error while closing db connection")
+	}
+	defer sqlDB.Close()
+
+	db.Model(&Service{}).Where("id = ?", id).Update("unsubscribed", true)
+}
+
