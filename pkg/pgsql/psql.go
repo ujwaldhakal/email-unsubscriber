@@ -8,35 +8,33 @@ import (
 )
 
 type Service struct {
-	db *gorm.DB
-	ID         string     `sql:"type:uuid;primary_key;default:uuid_generate_v4()"`
-	Name  string
-	Sender  string
-	ThreadId  string
+	db              *gorm.DB
+	ID              string `sql:"type:uuid;primary_key;default:uuid_generate_v4()"`
+	Name            string
+	Sender          string
+	ThreadId        string
 	UnsubscribeLink string
-	Unsubscribed bool
-
+	Unsubscribed    bool
 }
 
-
-func GetConnection() *gorm.DB{
-// refer https://github.com/go-sql-driver/mysql#dsn-data-source-name for details
+func GetConnection() *gorm.DB {
+	// refer https://github.com/go-sql-driver/mysql#dsn-data-source-name for details
 	db, err := gorm.Open(postgres.New(postgres.Config{
-		DSN: "host=pgsql user=postgres password=postgres dbname=postgres port=5432 sslmode=disable",
+		DSN:                  "host=pgsql user=postgres password=postgres dbname=postgres port=5432 sslmode=disable",
 		PreferSimpleProtocol: true, // disables implicit prepared statement usage
 	}), &gorm.Config{})
 	if err != nil {
-	panic(err)
-}
+		panic(err)
+	}
 	db.AutoMigrate(&Service{})
 
 	return db
 }
 
-func CreateService(service Service)  {
+func CreateService(service Service) {
 	db := GetConnection()
 
-	sqlDB ,err := db.DB()
+	sqlDB, err := db.DB()
 	if err != nil {
 		fmt.Println("got error while closing db connection")
 	}
@@ -45,16 +43,16 @@ func CreateService(service Service)  {
 	db.Create(service)
 }
 
-func SearchByNameAndSender(name string, sender string)  []Service {
-	db:= GetConnection()
-	sqlDB ,err := db.DB()
+func SearchByNameAndSender(name string, sender string) []Service {
+	db := GetConnection()
+	sqlDB, err := db.DB()
 
 	if err != nil {
 		fmt.Println("got error while closing db connection")
 	}
 	defer sqlDB.Close()
 
-	var services  []Service
+	var services []Service
 
 	db.Where(&Service{Name: name, Sender: sender}).Find(&services)
 

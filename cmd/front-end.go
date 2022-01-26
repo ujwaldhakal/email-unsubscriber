@@ -3,9 +3,9 @@ package cmd
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/cobra"
+	service "github.com/ujwaldhakal/email-unsubscriber/model"
 	"html/template"
 	"io"
-	service "github.com/ujwaldhakal/email-unsubscriber/model"
 	"net/http"
 )
 
@@ -18,11 +18,7 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 }
 
 var frontEnd = &cobra.Command{
-	Use:   "serve-frontend",
-	Short: "Hugo is a very fast static site generator",
-	Long: `A Fast and Flexible Static Site Generator built with
-                love by spf13 and friends in Go.
-                Complete documentation is available at http://hugo.spf13.com`,
+	Use: "serve-frontend",
 	Run: func(cmd *cobra.Command, args []string) {
 		e := echo.New()
 
@@ -48,11 +44,8 @@ var frontEnd = &cobra.Command{
 
 		e.Logger.Fatal(e.Start(":1323"))
 	},
-	
 }
 
-
-
-func init()  {
+func init() {
 	rootCmd.AddCommand(frontEnd)
 }

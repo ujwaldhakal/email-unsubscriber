@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/spf13/cobra"
-	"github.com/ujwaldhakal/email-unsubscriber/pkg/pgsql"
 	service "github.com/ujwaldhakal/email-unsubscriber/model"
+	"github.com/ujwaldhakal/email-unsubscriber/pkg/pgsql"
 	"github.com/ujwaldhakal/email-unsubscriber/pkg/rabbitmq"
 	gmailApi "github.com/ujwaldhakal/email-unsubscriber/service"
 	"google.golang.org/api/gmail/v1"
@@ -16,18 +16,11 @@ import (
 	"strings"
 )
 
-
-
 var parseEmail = &cobra.Command{
-	Use:   "parse-email",
-	Short: "Hugo is a very fast static site generator",
-	Long: `A Fast and Flexible Static Site Generator built with
-                love by spf13 and friends in Go.
-                Complete documentation is available at http://hugo.spf13.com`,
+	Use: "parse-email",
 	Run: func(cmd *cobra.Command, args []string) {
 		// Do Stuff Here
 		ctx := context.Background()
-
 
 		pgsql.GetConnection()
 
@@ -38,13 +31,12 @@ var parseEmail = &cobra.Command{
 		go func() {
 			for d := range msgs {
 
-				parseThread(string(d.Body),ctx)
-				fmt.Println("data consumed",string(d.Body))
+				parseThread(string(d.Body), ctx)
+				fmt.Println("data consumed", string(d.Body))
 
 				d.Ack(true)
 			}
 		}()
-
 
 		fmt.Printf(" [*] Waiting for messages. To exit press CTRL+C")
 		<-forever
@@ -52,17 +44,14 @@ var parseEmail = &cobra.Command{
 	},
 }
 
-
-
-func parseThread(threadId string, ctx context.Context)  {
+func parseThread(threadId string, ctx context.Context) {
 	srv := gmailApi.GetService(ctx)
-	data, e := srv.Users.Messages.Get("me",threadId).Do()
+	data, e := srv.Users.Messages.Get("me", threadId).Do()
 	if e != nil {
 		fmt.Println(e)
 	}
 
-	unsubscribeLink,SenderLink := findUnsubscribeAndSenderLinkFromHeader(data)
-
+	unsubscribeLink, SenderLink := findUnsubscribeAndSenderLinkFromHeader(data)
 
 	if unsubscribeLink == "" && len(data.Payload.Parts) > 0 {
 
@@ -75,22 +64,21 @@ func parseThread(threadId string, ctx context.Context)  {
 		unsubscribeLink = findUnsubscribeLinkInHtml(body.Body.Data)
 	}
 
-
 	if unsubscribeLink != "" {
-		fmt.Println("got it",pgsql.SearchByNameAndSender(parseUrlFromEmail(SenderLink),SenderLink))
+		fmt.Println("got it", pgsql.SearchByNameAndSender(parseUrlFromEmail(SenderLink), SenderLink))
 
 		service := service.Service{
-			ID: uuid.NewString(),
-			Name: parseUrlFromEmail(SenderLink),
-			Sender: SenderLink,
-			ThreadId: threadId,
+			ID:              uuid.NewString(),
+			Name:            parseUrlFromEmail(SenderLink),
+			Sender:          SenderLink,
+			ThreadId:        threadId,
 			UnsubscribeLink: unsubscribeLink,
 			Unsubscribed:    false,
 		}
 
 		serviceName := parseUrlFromEmail(SenderLink)
 
-		if len(service.SearchByNameAndSender(serviceName,SenderLink)) > 0 {
+		if len(service.SearchByNameAndSender(serviceName, SenderLink)) > 0 {
 			return
 		}
 
@@ -99,42 +87,40 @@ func parseThread(threadId string, ctx context.Context)  {
 
 }
 
-func findUnsubscribeAndSenderLinkFromHeader(data *gmail.Message) (string,string)  {
+func findUnsubscribeAndSenderLinkFromHeader(data *gmail.Message) (string, string) {
 
-	 unsubscribeLink := ""
-	 senderEmail := ""
-	for _,header := range data.Payload.Headers{
-		if header.Name == "List-Unsubscribe"{
+	unsubscribeLink := ""
+	senderEmail := ""
+	for _, header := range data.Payload.Headers {
+		if header.Name == "List-Unsubscribe" {
 			xurlsStrict := xurls.Strict()
 			output := xurlsStrict.FindAllString(header.Value, -1)
 
-
 			unsubscribeLink = output[0]
-			if !strings.Contains(unsubscribeLink,"https://") && len(output) > 1 {
+			if !strings.Contains(unsubscribeLink, "https://") && len(output) > 1 {
 				unsubscribeLink = output[1]
 			}
 
-			if !strings.Contains(unsubscribeLink,"https://")  {
+			if !strings.Contains(unsubscribeLink, "https://") {
 				unsubscribeLink = ""
 			}
 		}
 
-
-		if header.Name == "From"{
+		if header.Name == "From" {
 			senderEmail = parseEmailFromString(header.Value)
 		}
 	}
-	return unsubscribeLink,senderEmail
+	return unsubscribeLink, senderEmail
 }
 
 func parseUrlFromEmail(email string) string {
 
-	splitedStr := strings.Split(email,"@")
+	splitedStr := strings.Split(email, "@")
 
 	return splitedStr[1]
 }
 
-func parseEmailFromString(data string) (string) {
+func parseEmailFromString(data string) string {
 	re := regexp.MustCompile(`<(.*?)\>`)
 	matched := re.FindString(data)
 	email := strings.TrimLeft(strings.TrimRight(matched, ">"), "<")
@@ -154,11 +140,11 @@ func findUnsubscribeLinkInHtml(data string) string {
 	output := xurlsStrict.FindAllString(matched, -1)
 
 	if len(output) == 0 {
-		return "";
+		return ""
 	}
 	return output[0]
 }
 
-func init()  {
+func init() {
 	rootCmd.AddCommand(parseEmail)
 }

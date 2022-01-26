@@ -10,37 +10,29 @@ import (
 	"google.golang.org/api/gmail/v1"
 )
 
-
 type messageId struct {
-	id string;
+	id string
 }
 
 func getMessages(srv *gmail.Service, token service.PageToken) {
 
-	messages := gmailApi.GetMessageList(srv,"me",token)
+	messages := gmailApi.GetMessageList(srv, "me", token)
 
-	fmt.Println("total message",len(messages.Messages))
-	for _,d := range messages.Messages {
+	fmt.Println("total message", len(messages.Messages))
+	for _, d := range messages.Messages {
 		id := d.Id
 		//time.Sleep(3 * time.Second)
-		rabbitmq.Publish("parse-email",[]byte(id))
+		rabbitmq.Publish("parse-email", []byte(id))
 
 	}
 
-
 	if messages.NextPageToken != "" {
-		getMessages(srv,service.PageToken{messages.NextPageToken})
+		getMessages(srv, service.PageToken{messages.NextPageToken})
 	}
 }
 
-
-
 var syncInbox = &cobra.Command{
-	Use:   "sync-inbox",
-	Short: "Hugo is a very fast static site generator",
-	Long: `A Fast and Flexible Static Site Generator built with
-                love by spf13 and friends in Go.
-                Complete documentation is available at http://hugo.spf13.com`,
+	Use: "sync-inbox",
 	Run: func(cmd *cobra.Command, args []string) {
 		// Do Stuff Here
 
@@ -48,12 +40,11 @@ var syncInbox = &cobra.Command{
 
 		srv := gmailApi.GetService(ctx)
 
-		getMessages(srv,service.PageToken{})
+		getMessages(srv, service.PageToken{})
 
 	},
 }
 
-
-func init()  {
+func init() {
 	rootCmd.AddCommand(syncInbox)
 }

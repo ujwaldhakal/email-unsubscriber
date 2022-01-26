@@ -26,7 +26,7 @@ With this project everything is owned by your local machine i.e
 
 
 ## Usage
-
+* You will find `.env` has two vars `SEARCH_DATE_FROM` which accept date format in `2022-01-01` and `INBOX_SEARCH_QUERY` which has initially promotional label `label=promotions`, if you keep it blank it will search all emails. 
 * Run `make publish` it will read all the email from your inbox and put those emails on RabbitMq to parse the unsubscribe link
 * Run `make consume` it will consume all the queue published by first command and start parsing the link
 * Run `make serve-frontend` which will present you the service name, sender email & the unsubscribe link which you can simply click and unsubscribe
