@@ -23,16 +23,21 @@
 </head>
 <body>
 
-<h2>List</h2>
 
-<table id="sunsubscription-link">
-    <tr>
-        <th>Service Name</th>
-        <th>Sender</th>
-        <th>Link</th>
-    </tr>
+<div class="container">
+<div class="row">
+    <h2>List of services to unsubscribe</h2>
 
-</table>
+    <table id="sunsubscription-link" class="table">
+        <tr>
+            <th>Service Name</th>
+            <th>Sender</th>
+            <th>Unsubscribe Link</th>
+        </tr>
+
+    </table>
+</div>
+</div>
 
 <script>
     $(document).ready(function () {
@@ -42,7 +47,7 @@
             success: function (data) {
                 console.log("data",data)
                 data.forEach(function(val){
-                    let html = `<tr> <td>${val.Name}</td> <td>${val.Sender}</td>  <td> <a id="unsubscribe" target="_blank" data-id="${val.ID}" href="${val.UnsubscribeLink}"> Click here</a></td> </tr>`
+                    let html = `<tr> <td>${val.Name}</td> <td>${val.Sender}</td>  <td> <a id="unsubscribe" target="_blank" data-id="${val.ID}" href="${val.UnsubscribeLink}"> Click here to unsubscribe</a></td> </tr>`
                     $('table').append(html)
                 })
             },
