@@ -11,3 +11,7 @@ consume:
 
 serve-frontend:
 	docker-compose run -p 1323:1323 unsubscriber go run main.go serve-frontend
+
+format:
+	docker-compose run unsubscriber gofmt -s -w .
+

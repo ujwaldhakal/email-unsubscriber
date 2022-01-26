@@ -53,7 +53,7 @@ func ConsumerClient(queueName string) <-chan amqp.Delivery {
 	msgs, _ := ch.Consume(
 		queueName, // queue
 		"",        // consumer
-		false,      // auto-ack
+		false,     // auto-ack
 		false,     // exclusive
 		false,     // no-local
 		false,     // no-wait

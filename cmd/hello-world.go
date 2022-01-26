@@ -3,23 +3,26 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
+	"log"
 	"os"
+	"time"
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "sync-inbox",
-	Short: "Hugo is a very fast static site generator",
-	Long: `A Fast and Flexible Static Site Generator built with
-                love by spf13 and friends in Go.
-                Complete documentation is available at http://hugo.spf13.com`,
+	Use: "hello world",
 	Run: func(cmd *cobra.Command, args []string) {
-		// Do Stuff Here
-
 		fmt.Println("hello world")
 
+		const layout = "2006-01-02"
+		snapshot := "2017-07-25"
+		t, err := time.Parse(layout, snapshot)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Println(t.Unix())
 	},
 }
-
 
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {

@@ -27,7 +27,6 @@ func GetClient(config *oauth2.Config) *http.Client {
 	return config.Client(context.Background(), tok)
 }
 
-
 // Request a token from the web, then returns the retrieved token.
 func getTokenFromWeb(config *oauth2.Config) *oauth2.Token {
 	authURL := config.AuthCodeURL("state-token", oauth2.AccessTypeOffline)
@@ -58,7 +57,6 @@ func tokenFromFile(file string) (*oauth2.Token, error) {
 	return tok, err
 }
 
-
 // Saves a token to a file path.
 func saveToken(path string, token *oauth2.Token) {
 	fmt.Printf("Saving credential file to: %s\n", path)
@@ -81,7 +79,6 @@ func GetService(ctx context.Context) *gmail.Service {
 	if err != nil {
 		log.Fatalf("Unable to parse client secret file to config: %v", err)
 	}
-
 
 	client := GetClient(config)
 

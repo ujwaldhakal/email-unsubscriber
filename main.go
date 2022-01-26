@@ -4,6 +4,6 @@ import (
 	"github.com/ujwaldhakal/email-unsubscriber/cmd"
 )
 
-func main()  {
+func main() {
 	cmd.Execute()
 }
