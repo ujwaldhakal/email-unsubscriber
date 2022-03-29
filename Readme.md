@@ -1,8 +1,9 @@
 # Email Unsubscriber
 
+This is just a tutorial on learning golang where app is containerized using docker. On server side Golang (echo framework) is used, on database postgres & for message queue Rabbitmq has been used.
 
 It is really hard to unsubscribe from Gmail because we might have many emails. The aim of this project is to easily provide way to unsubscribe email by creating your own app and run the code from opensource.
-There are many tools already built but you might be concerned about the  privacy because this process requires you to give access to your inbox.
+There are many great tools already built for this. However this has been built just to play around with the Google API and learn Golang
 
 With this project everything is owned by your local machine i.e
 

@@ -1,11 +1,11 @@
-package service
+package google
 
 import (
 	"fmt"
+	"github.com/joho/godotenv"
 	"google.golang.org/api/gmail/v1"
 	"log"
 	"os"
-	"github.com/joho/godotenv"
 	"time"
 )
 
@@ -20,7 +20,7 @@ func GetMessageList(srv *gmail.Service, userId string, token PageToken) *gmail.L
 		log.Fatal("Error loading .env file")
 	}
 
-	dateFrom := fmt.Sprintf("%d" ,convertDateToTimestamp(os.Getenv("SEARCH_DATE_FROM")))
+	dateFrom := fmt.Sprintf("%d" , convertDateToTimestamp(os.Getenv("SEARCH_DATE_FROM")))
 	searchQuery  := os.Getenv("INBOX_SEARCH_QUERY")
 
 	fmt.Println("got it search",searchQuery)
