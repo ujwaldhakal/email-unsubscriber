@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/ujwaldhakal/email-unsubscriber/pkg/google"
-	rabbitmq "github.com/ujwaldhakal/email-unsubscriber/pkg/rabbitmq"
+	"github.com/ujwaldhakal/email-unsubscriber/pkg/rabbitmq"
 	"google.golang.org/api/gmail/v1"
 )
 
@@ -15,8 +15,15 @@ type messageId struct {
 
 func getMessages(srv *gmail.Service, token google.PageToken) {
 
-	messages := google.GetMessageList(srv, "me", token)
+	fmt.Println("damn",*srv.Users.Messages)
+	gmail := &google.Gmail{
+		UserId: "me",
+		Token: token.Token,
+		SearchQuery: "q",
+		SearchDate: "2021-01-01",
 
+	}
+	messages := gmail.GetMessageList(srv.Users.Messages)
 	fmt.Println("total message", len(messages.Messages))
 	for _, d := range messages.Messages {
 		id := d.Id

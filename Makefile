@@ -16,4 +16,4 @@ format:
 	docker-compose run unsubscriber gofmt -s -w .
 
 test:
-	go test ./...
+	go test ./.../google

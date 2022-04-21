@@ -2,10 +2,8 @@ package google
 
 import (
 	"fmt"
-	"github.com/joho/godotenv"
 	"google.golang.org/api/gmail/v1"
 	"log"
-	"os"
 	"time"
 )
 
@@ -13,19 +11,22 @@ type PageToken struct {
 	Token string
 }
 
-func GetMessageList(srv *gmail.Service, userId string, token PageToken) *gmail.ListMessagesResponse {
+type GmailApi interface {
+	List(userId string) *gmail.UsersMessagesListCall
+}
 
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+type Gmail struct {
+	UserId string
+	Token string
+	SearchDate string
+	SearchQuery string
+}
 
-	dateFrom := fmt.Sprintf("%d" , convertDateToTimestamp(os.Getenv("SEARCH_DATE_FROM")))
-	searchQuery  := os.Getenv("INBOX_SEARCH_QUERY")
+func (gmail Gmail) GetMessageList(srv GmailApi) *gmail.ListMessagesResponse {
+	dateFrom := fmt.Sprintf("%d" , convertDateToTimestamp(gmail.SearchDate))
 
-	fmt.Println("got it search",searchQuery)
-	fmt.Println("got it date",dateFrom)
-	data, err := srv.Users.Messages.List(userId).Q(searchQuery+ " after:" + dateFrom).PageToken(token.Token).Do()
+	fmt.Println("upto here")
+	data, err := srv.List(gmail.UserId).Q(gmail.SearchQuery+ " after:" + dateFrom).PageToken(gmail.Token).Do()
 	if err != nil {
 		log.Fatalf("Unable to retrieve messages: %v", err)
 	}
