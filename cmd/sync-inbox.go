@@ -23,7 +23,7 @@ func getMessages(srv *gmail.Service, token google.PageToken) {
 		SearchDate: "2021-01-01",
 
 	}
-	messages := gmail.GetMessageList(srv.Users.Messages)
+	messages := gmail.GetMessageList(srv.Users.Messages.List("me"))
 	fmt.Println("total message", len(messages.Messages))
 	for _, d := range messages.Messages {
 		id := d.Id
